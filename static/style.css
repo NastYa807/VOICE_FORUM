@@ -1,0 +1,130 @@
+/* static/style.css */
+
+/* 1. ОБЩИЕ НАСТРОЙКИ */
+body {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    background-color: #1a1a1a; /* Глубокий темный фон */
+    color: #f2f2f2;
+    margin: 0;
+    padding: 0;
+}
+
+/* Отступ для контента, чтобы он не залезал под фиксированную шапку */
+.main {
+    padding-top: 100px;
+}
+
+h1 {
+    text-align: center;
+    color: #fff;
+    font-size: 2.5em;
+    margin-bottom: 40px;
+    font-family: 'Playfair Display', serif;
+}
+
+/* 2. ИСПРАВЛЕННАЯ ШАПКА (HEADER) */
+.header {
+    background-color: #262626; /* Темная плашка */
+    height: 64px;
+    display: flex;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    border-bottom: 1px solid #333;
+    padding: 0 40px;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between; /* Главная — слева, Лого — центр, Войти — справа */
+    align-items: center;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Ссылка "Главная" слева */
+.nav-left .nav-link {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 14px;
+    opacity: 0.7;
+    transition: 0.3s;
+}
+
+.nav-left .nav-link:hover {
+    opacity: 1;
+}
+
+/* Логотип строго по центру */
+.logo-text-central {
+    color: #ffffff;
+    font-weight: 700;
+    letter-spacing: 2px;
+    font-size: 18px;
+    text-transform: uppercase;
+    position: absolute; /* Магия для идеальной центровки */
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Кнопка "Войти" справа */
+.auth-btn-outline {
+    color: #ffffff;
+    text-decoration: none;
+    border: 1px solid #555; /* Тонкая серая рамка */
+    padding: 6px 22px;
+    border-radius: 20px;
+    font-size: 13px;
+    transition: all 0.3s ease;
+}
+
+.auth-btn-outline:hover {
+    background-color: #fff;
+    color: #1a1a1a;
+    border-color: #fff;
+}
+
+/* 3. СЕТКА КАТЕГОРИЙ */
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.card {
+    background: linear-gradient(135deg, #3a415a 0%, #292e41 100%);
+    border-radius: 12px;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    font-size: 1.2em;
+    font-weight: 600;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+    background: linear-gradient(135deg, #464f6e 0%, #32384f 100%);
+}
+
+/* 4. ФУТЕР (Для красоты) */
+.footer {
+    text-align: center;
+    padding: 40px 0;
+    opacity: 0.4;
+    font-size: 12px;
+}

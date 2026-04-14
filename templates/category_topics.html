@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Раздел: {{ cat_name }}</h2>
+<ul>
+    {% for topic in topics %}
+    <li>
+        <a href="{{ url_for('topic_detail', topic_id=topic.id) }}">{{ topic.title }}</a> 
+        (Лайков: {{ topic.likes }})
+    </li>
+    {% else %}
+    <li>В этом разделе пока нет обсуждений.</li>
+    {% endfor %}
+</ul>
+{% endblock %}
