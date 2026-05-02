@@ -4,7 +4,7 @@
 <ul>
     {% for topic in topics %}
     <li>
-        <a href="{{ url_for('topic_detail', topic_id=topic.id) }}">{{ topic.title }}</a> 
+        <a href="{{ url_for('topic_detail', topic_id=topic.id) }}">{{ topic.title }}</a>
         (Лайков: {{ topic.likes }})
     </li>
     {% else %}
