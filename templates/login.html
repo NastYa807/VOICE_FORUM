@@ -1,30 +1,96 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="flex justify-center items-center min-h-[60vh]">
-    <div class="bg-white p-8 rounded-3xl shadow-2xl border-4 border-blue-600 w-full max-w-md transform rotate-1">
-        <h2 class="text-4xl font-black italic tracking-tighter text-blue-600 uppercase mb-6 text-center">
-            Вход в Глубинку
-        </h2>
+<div style="max-width: 450px; margin: 50px auto; background: white; border: 4px solid #000000; padding: 35px; box-shadow: 10px 10px 0 rgba(0,0,0,1);">
+    <!-- Заголовок -->
+    <h1 style="text-align: center; font-size: 32px; font-weight: bold; color: #000000; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 2px; font-family: 'Inter', 'Segoe UI', sans-serif;">
+        ВХОД В ГЛУБИНКУ
+    </h1>
 
-        <form method="POST" class="space-y-4">
-            <div>
-                <label class="block text-[10px] uppercase font-bold tracking-widest text-blue-800 ml-2 mb-1">Твое имя</label>
-                <input type="text" name="username" placeholder="Логин" required
-                    class="w-full px-5 py-3 rounded-xl border-2 border-blue-200 focus:border-blue-600 focus:outline-none transition-all placeholder:opacity-50">
-            </div>
-
-            <div>
-                <label class="block text-[10px] uppercase font-bold tracking-widest text-blue-800 ml-2 mb-1">Секретный шифр</label>
-                <input type="password" name="password" placeholder="Пароль" required
-                    class="w-full px-5 py-3 rounded-xl border-2 border-blue-200 focus:border-blue-600 focus:outline-none transition-all placeholder:opacity-50">
-            </div>
-
-            <button type="submit"
-                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-4 rounded-xl shadow-lg hover:shadow-blue-300 transition-all uppercase tracking-widest mt-4 border-b-4 border-blue-800 active:border-b-0 active:translate-y-1">
-                ВОРВАТЬСЯ
-            </button>
-        </form>
+    <!-- Переключатель между Входом и Регистрацией -->
+    <div style="display: flex; border: 2px solid #2563EB; margin-bottom: 25px;">
+        <button id="showLogin" style="flex: 1; padding: 12px; background: #2563EB; color: white; font-weight: bold; font-size: 16px; cursor: pointer; border: none; transition: 0.3s;">
+            Вход
+        </button>
+        <button id="showRegister" style="flex: 1; padding: 12px; background: white; color: #2563EB; font-weight: bold; font-size: 16px; cursor: pointer; border: none; transition: 0.3s;">
+            Регистрация
+        </button>
     </div>
+
+    <!-- ФОРМА ВХОДА -->
+    <form id="loginForm" method="POST" action="{{ url_for('login') }}">
+        <input type="hidden" name="form_type" value="login">
+
+        <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #1f2937;">Логин</label>
+        <input type="text" name="username" placeholder="Твой логин" required
+               style="width: 100%; padding: 12px; margin-bottom: 20px; border: 2px solid #2563EB; border-radius: 5px; font-size: 14px; box-sizing: border-box;">
+
+        <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #1f2937;">Пароль</label>
+        <input type="password" name="password" placeholder="Секретный шифр" required
+               style="width: 100%; padding: 12px; margin-bottom: 25px; border: 2px solid #2563EB; border-radius: 5px; font-size: 14px; box-sizing: border-box;">
+
+        <button type="submit" style="width: 100%; padding: 14px; background: #2563EB; color: white; font-weight: bold; font-size: 18px; cursor: pointer; border: none; border-radius: 5px; transition: 0.3s; text-transform: uppercase;">
+            ВОРВАТЬСЯ
+        </button>
+    </form>
+
+    <!-- ФОРМА РЕГИСТРАЦИИ (скрыта) -->
+    <form id="registerForm" method="POST" action="{{ url_for('login') }}" style="display: none;">
+        <input type="hidden" name="form_type" value="register">
+
+        <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #1f2937;">Придумай логин</label>
+        <input type="text" name="username" placeholder="Твой уникальный логин" required
+               style="width: 100%; padding: 12px; margin-bottom: 20px; border: 2px solid #3b82f6; border-radius: 5px; font-size: 14px; box-sizing: border-box;">
+
+        <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #1f2937;">Пароль</label>
+        <input type="password" name="password" placeholder="Придумай пароль" required
+               style="width: 100%; padding: 12px; margin-bottom: 20px; border: 2px solid #3b82f6; border-radius: 5px; font-size: 14px; box-sizing: border-box;">
+
+        <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #1f2937;">Повтори пароль</label>
+        <input type="password" name="confirm_password" placeholder="Повтори пароль" required
+               style="width: 100%; padding: 12px; margin-bottom: 25px; border: 2px solid #3b82f6; border-radius: 5px; font-size: 14px; box-sizing: border-box;">
+
+        <button type="submit" style="width: 100%; padding: 14px; background: #2563EB; color: white; font-weight: bold; font-size: 18px; cursor: pointer; border: none; border-radius: 5px; transition: 0.3s; text-transform: uppercase;">
+            ЗАРЕГАТЬСЯ
+        </button>
+    </form>
 </div>
+
+<script>
+    const showLogin = document.getElementById('showLogin');
+    const showRegister = document.getElementById('showRegister');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+showLogin.onclick = () => {
+        showLogin.style.background = '#3b82f6';
+        showLogin.style.color = 'white';
+        showRegister.style.background = 'white';
+        showRegister.style.color = '#3b82f6';
+        loginForm.style.display = 'block';
+        registerForm.style.display = 'none';
+    };
+
+    showRegister.onclick = () => {
+        showRegister.style.background = '#3b82f6';
+        showRegister.style.color = 'white';
+        showLogin.style.background = 'white';
+        showLogin.style.color = '#3b82f6';
+        registerForm.style.display = 'block';
+        loginForm.style.display = 'none';
+    };
+
+    // Проверка паролей при регистрации
+    document.getElementById('registerForm').onsubmit = (e) => {
+        const password = e.target.querySelector('input[name="password"]').value;
+        const confirm = e.target.querySelector('input[name="confirm_password"]').value;
+
+        if (password !== confirm) {
+            e.preventDefault();
+            alert('Пароли не совпадают! Попробуй ещё раз.');
+        } else if (password.length < 3) {
+            e.preventDefault();
+            alert('Пароль должен быть минимум 3 символа!');
+        }
+    };
+</script>
 {% endblock %}

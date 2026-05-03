@@ -4,17 +4,16 @@
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
 
     {% set categories = [
-        ('Музыка и Макан', 'blue'),
-        ('Бизнес и Эпштейн', 'green'),
-        ('Стримеры и Полковник', 'purple'),
-        ('Спорт и Волочкова', 'orange'),
-        ('Женская логика и Кисова', 'pink'),
-        ('Мужская логика и Маркарян', 'indigo')
+        ('Музыка и Макан', 2, 'blue'),
+        ('Бизнес и Эпштейн', 6, 'green'),
+        ('Стримеры и Полковник', 3, 'purple'),
+        ('Спорт и Волочкова', 1, 'orange'),
+        ('Женская логика и Кисова', 5, 'pink'),
+        ('Мужская логика и Маркарян', 4, 'indigo')
     ] %}
 
-    {# Используем loop.index, чтобы автоматически получить ID (1, 2, 3...) #}
-    {% for name, color in categories %}
-    <a href="{{ url_for('category', cat_id=loop.index) }}" class="card-hover">
+    {% for name, cat_id, color in categories %}
+    <a href="{{ url_for('category', cat_id=cat_id) }}" class="card-hover">
         <div class="bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col justify-between h-40">
             <h2 class="text-xl font-bold uppercase">{{ name }}</h2>
             <div class="flex justify-end">
@@ -27,10 +26,9 @@
 </div>
 
 <div class="bg-white border-4 border-black p-4 mb-10 flex items-center gap-4">
-    <div class="text-4xl">📢</div>
     <div>
         <p class="font-bold">Чистый Свэг:</p>
-        <p class="italic text-sm">"Зашел на форум, написал коммент — почувствовал себя так же круто, как Егор Кринж на сцене!"</p>
+        <p class="italic text-sm">"Зашёл на форум, написал коммент — почувствовал себя так же круто, как Егор Кринж на сцене!"</p>
     </div>
 </div>
 {% endblock %}
