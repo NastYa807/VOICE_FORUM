@@ -1,20 +1,51 @@
 {% extends "base.html" %}
 {% block content %}
-    <h1>{{ topic.title }}</h1>
-    <p>{{ topic.content }}</p>
-    <p>Лайков: {{ topic.likes }}</p>
-
-    <hr>
-    <h3>Комментарии:</h3>
-    {% for comment in comments %}
-        <div class="comment">
-            <strong>{{ comment.author }}:</strong> {{ comment.text }}
+<!-- Блок самой темы -->
+<div class="bg-white border-4 border-black p-8 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] mb-10">
+    <div class="flex justify-between items-start mb-6">
+        <h1 class="text-4xl font-black uppercase">{{ topic.title }}</h1>
+        <div class="flex flex-col items-end gap-2">
+            <span class="bg-black text-white px-3 py-1 text-xs font-bold uppercase">Автор: {{ topic.author }}</span>
+            {% if current_user.is_admin %}
+            <form action="{{ url_for('delete_topic', topic_id=topic.id) }}" method="POST" onsubmit="return confirm('Удалить всю тему со всеми сообщениями?');">
+                <button type="submit" class="bg-red-600 text-white px-3 py-1 text-[10px] font-bold uppercase border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-none transition-all">СНЕСТИ ТЕМУ (ADMIN)</button>
+            </form>
+            {% endif %}
         </div>
-    {% endfor %}
-
-    <hr>
+    </div>
+    <p class="text-xl leading-relaxed mb-8 border-t-4 border-black pt-6">{{ topic.content }}</p>
     <form method="POST">
-        <textarea name="text" placeholder="Ваш комментарий..." required></textarea><br>
-        <button type="submit">Отправить</button>
+        <button type="submit" name="like" class="bg-pink-400 border-4 border-black px-8 py-3 font-bold uppercase shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:shadow-none transition-all">❤️ РЕСПЕКТ ({{ topic.likes }})</button>
     </form>
+</div>
+
+<!-- Блок комментариев -->
+<div class="bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+    <h3 class="text-2xl font-bold uppercase mb-8 italic">Базар под темой:</h3>
+    <div class="space-y-4 mb-10">
+        {% for comment in comments %}
+        <div class="border-l-8 border-blue-600 pl-4 py-3 bg-gray-50 border-y-2 border-r-2 border-black flex justify-between items-start">
+            <div>
+                <span class="font-black text-blue-600 uppercase text-xs">{{ comment.author }}:</span>
+                <p class="mt-1 font-medium">{{ comment.text }}</p>
+            </div>
+
+            <!-- КНОПКА УДАЛЕНИЯ СООБЩЕНИЯ -->
+            {% if comment.author == current_user.username or current_user.is_admin %}
+            <form action="{{ url_for('delete_comment', comment_id=comment.id) }}" method="POST" onsubmit="return confirm('Удалить твой коммент?');">
+                <button type="submit" class="text-[10px] text-red-600 font-bold uppercase hover:underline">
+                    [Удалить]
+                </button>
+            </form>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Форма отправки сообщения -->
+    <form method="POST" class="border-t-4 border-black pt-8">
+        <textarea name="comment" placeholder="Напиши чё-нить ровное..." required class="w-full border-4 border-black p-4 font-bold bg-yellow-50 focus:bg-white mb-4 h-24"></textarea>
+        <button type="submit" class="bg-black text-white px-10 py-4 font-black uppercase hover:bg-blue-700 transition-colors">ОТПРАВИТЬ СООБЩЕНИЕ</button>
+    </form>
+</div>
 {% endblock %}

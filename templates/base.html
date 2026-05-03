@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Голос Глубинки</title>
-     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #fef08a; } /* Желтый фон как на скрине */
+        body { background-color: #fef08a; } /* Желтый фон */
         .card-hover:hover { transform: scale(1.02); transition: 0.3s; }
+        .neo-brutal { border: 4px solid black; box-shadow: 8px 8px 0px 0px rgba(0,0,0,1); }
     </style>
 </head>
 <body class="font-sans text-gray-900">
@@ -49,11 +49,11 @@
             </div>
         </div>
     </div>
-
     <div class="h-1 bg-blue-800 shadow-inner"></div>
 </nav>
-    <main class="container mx-auto px-4">
-        {% block content %}{% endblock %}
-    </main>
+
+<main class="container mx-auto px-4 pb-20">
+    {% block content %}{% endblock %}
+</main>
 </body>
 </html>
