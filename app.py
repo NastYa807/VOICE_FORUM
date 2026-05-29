@@ -8,7 +8,8 @@ from datetime import datetime, timedelta
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'glubinka-secret-key-2024'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///forum.db'
+# Замени строку №13 на эту (вставив свои данные от Neon):
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://neondb_owner:npg_Z6mIAdB5yaiT@ep-hidden-haze-aq65rdqu.c-8.us-east-1.aws.neon.tech/neondb?sslmode=require'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 #настройки для почты админа
