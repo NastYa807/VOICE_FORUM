@@ -1,35 +1,66 @@
+
 {% extends "base.html" %}
+
 {% block content %}
 <div class="flex justify-between items-center mb-10">
-    <h2 class="text-3xl font-black uppercase border-b-4 border-black pb-2">Раздел: {{ cat.name }}</h2>
+    <div>
+        <h2 class="text-3xl font-black uppercase border-b-4 border-black pb-2 mt-2">
+            {% if cat.icon %}{{ cat.icon }} {% endif %}Раздел: {{ cat.name }}
+        </h2>
+    </div>
     <button onclick="document.getElementById('addForm').classList.toggle('hidden')" class="bg-green-400 border-4 border-black px-6 py-2 font-bold uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-1 hover:shadow-none transition-all">
         Создать тему +
     </button>
 </div>
 
-<!-- Скрытая форма создания темы -->
+<!-- скрытая форма создания темы -->
 <div id="addForm" class="hidden mb-10 bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
     <form method="POST">
         <input type="text" name="title" placeholder="Заголовок темы" required class="w-full border-2 border-black p-3 mb-4 font-bold uppercase">
         <textarea name="content" placeholder="О чем перетрем?" required class="w-full border-2 border-black p-3 mb-4 h-32"></textarea>
-        <button type="submit" class="bg-blue-600 text-white border-2 border-black px-6 py-2 font-bold uppercase">Закинуть в обсуд</button>
+        <button type="submit" class="bg-blue-600 text-white border-2 border-black px-6 py-2 font-bold uppercase hover:bg-blue-700 transition">Закинуть в обсуд</button>
     </form>
 </div>
 
 <div class="grid gap-8">
     {% for topic in topics %}
-    <a href="{{ url_for('topic_detail', topic_id=topic.id) }}" class="block group card-hover">
+    {% set colors = ['bg-red-400', 'bg-blue-400', 'bg-green-400', 'bg-yellow-400', 'bg-purple-400', 'bg-pink-400', 'bg-indigo-400', 'bg-orange-400', 'bg-teal-400', 'bg-cyan-400'] %}
+    {% set random_color = colors[loop.index0 % colors|length] %}
+    <div class="block group card-hover">
         <div class="bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] group-hover:bg-blue-50 transition-colors">
-            <h3 class="text-2xl font-black uppercase mb-3">{{ topic.title }}</h3>
+            <div class="flex justify-between items-start">
+                <h3 class="text-2xl font-black uppercase mb-3 flex-1">
+                    <a href="{{ url_for('topic_detail', topic_id=topic.id) }}" class="hover:text-blue-600 transition">
+                        {{ topic.title }}
+                    </a>
+                </h3>
+                {% if current_user.is_admin %}
+                <form method="POST" action="{{ url_for('delete_topic', topic_id=topic.id) }}" onsubmit="return confirm('Точно удалить тему? Вся движуха пропадет!')">
+                    <button type="submit" class="bg-red-600 text-white border-2 border-black px-3 py-1 text-sm font-bold uppercase hover:bg-red-700 transition">
+                        Удалить
+                    </button>
+                </form>
+                {% endif %}
+            </div>
             <p class="text-gray-700 italic">
                 {{ topic.content | truncate(160, true, "...") }}
             </p>
             <div class="mt-6 flex justify-between items-center font-bold">
-                <span class="bg-pink-300 border-2 border-black px-3 py-1 text-sm">❤️ РЕСПЕКТЫ: {{ topic.likes }}</span>
-                <span class="text-blue-600 underline uppercase tracking-tighter">Влететь в тему →</span>
+                <div class="flex gap-3">
+                    <span class="bg-pink-300 border-2 border-black px-3 py-1 text-sm">❤️ РЕСПЕКТЫ: {{ topic.likes }}</span>
+                    <span class="bg-gray-200 border-2 border-black px-3 py-1 text-sm">{{ topic.author }}</span>
+                    {% if topic.created_at %}
+                    <span class="bg-gray-200 border-2 border-black px-3 py-1 text-sm">{{ topic.created_at.strftime('%d.%m.%Y') }}</span>
+                    {% endif %}
+                </div>
+                <!-- влететь в тему рандомный цвет -->
+                <a href="{{ url_for('topic_detail', topic_id=topic.id) }}"
+                   class="{{ random_color }} border-4 border-black px-4 py-2 font-bold uppercase text-black hover:brightness-95 transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-1 hover:shadow-none inline-flex items-center gap-2">
+                    Влететь в тему →
+                </a>
             </div>
         </div>
-    </a>
+    </div>
     {% else %}
     <div class="bg-white border-4 border-black p-10 text-center font-bold uppercase italic">Тут пока глухо. Создай первую движуху!</div>
     {% endfor %}

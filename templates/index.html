@@ -1,15 +1,22 @@
+
 {% extends 'base.html' %}
+
 {% block content %}
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
     {% for cat in categories %}
-    <a href="{{ url_for('category', cat_id=cat.id) }}" class="hover:scale-105 transition-transform">
-        <div class="bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col justify-between h-40">
-            <h2 class="text-xl font-bold uppercase">{{ cat.name }}</h2>
-            <div class="flex justify-end">
-                <span class="bg-{{ cat.color }}-400 border-2 border-black px-2 py-1 text-xs font-bold uppercase">Влететь →</span>
+    <a href="{{ url_for('category', cat_id=cat.id) }}" class="hover:scale-105 transition-transform duration-200">
+        <div class="bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col justify-between h-40 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-shadow">
+            <div>
+                <div class="text-4xl mb-2">{{ cat.icon }}</div>
+                <h2 class="text-xl font-bold uppercase">{{ cat.name }}</h2>
+            </div>
+            <div class="flex justify-end mt-4">
+                <span class="bg-{{ cat.color }}-500 text-white border-2 border-black px-3 py-1 text-xs font-bold uppercase rounded">Влететь →</span>
             </div>
         </div>
     </a>
     {% endfor %}
+</div>
+
 </div>
 {% endblock %}

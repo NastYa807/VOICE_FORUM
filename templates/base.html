@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -9,6 +10,32 @@
         body { background-color: #fef08a; } /* Желтый фон */
         .card-hover:hover { transform: scale(1.02); transition: 0.3s; }
         .neo-brutal { border: 4px solid black; box-shadow: 8px 8px 0px 0px rgba(0,0,0,1); }
+
+        /* Кастомные цвета для новых категорий */
+        .bg-emerald-500 { background-color: #10b981; }
+        .bg-cyan-500 { background-color: #06b6d4; }
+        .bg-gray-500 { background-color: #6b7280; }
+        .bg-yellow-500 { background-color: #eab308; }
+
+        .hover\:bg-emerald-600:hover { background-color: #059669; }
+        .hover\:bg-cyan-600:hover { background-color: #0891b2; }
+        .hover\:bg-gray-600:hover { background-color: #4b5563; }
+        .hover\:bg-yellow-600:hover { background-color: #ca8a04; }
+
+        /* Анимация для flash-сообщений */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .flash-message {
+            animation: slideDown 0.3s ease-out;
+        }
     </style>
 </head>
 <body class="font-sans text-gray-900">
@@ -30,6 +57,9 @@
                     <div class="hidden md:flex flex-col items-end mr-2 text-white">
                         <span class="text-[10px] uppercase opacity-70 tracking-widest">В сети</span>
                         <span class="font-bold tracking-tight">{{ current_user.username }}</span>
+                        {% if current_user.is_admin %}
+                            <span class="text-[8px] bg-red-600 px-1 mt-1 rounded">ADMIN</span>
+                        {% endif %}
                     </div>
 
                     <a href="#" class="flex items-center justify-center w-12 h-12 rounded-xl bg-white/10 border border-white/20 text-white hover:bg-white hover:text-blue-600 transition-all duration-300">
@@ -43,7 +73,7 @@
                     </a>
                 {% else %}
                     <a href="{{ url_for('login') }}" class="group relative inline-flex items-center justify-center px-6 py-3 font-bold text-white transition-all duration-200 bg-blue-700 font-pj rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 border-2 border-white hover:bg-white hover:text-blue-600">
-                        РЕГИСТРАЦИЯ
+                        ВХОД / РЕГИСТРАЦИЯ
                     </a>
                 {% endif %}
             </div>
@@ -53,7 +83,46 @@
 </nav>
 
 <main class="container mx-auto px-4 pb-20">
+    <!-- Flash сообщения -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="fixed top-24 right-4 z-50 space-y-2 max-w-md w-full">
+                {% for category, message in messages %}
+                    <div class="flash-message p-4 rounded-xl border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
+                        {% if category == 'success' %}bg-green-400
+                        {% elif category == 'error' %}bg-red-400
+                        {% else %}bg-blue-400{% endif %}">
+                        <div class="flex items-start gap-3">
+                            <div class="flex-shrink-0">
+                            </div>
+                            <div class="flex-1 font-bold text-black">
+                                {{ message }}
+                            </div>
+                            <button onclick="this.parentElement.parentElement.remove()" class="text-black hover:text-gray-700">
+                                <span class="text-xl">✕</span>
+                            </button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
     {% block content %}{% endblock %}
 </main>
+
+<!-- Скрипт для авто-скрытия flash сообщений через 5 секунд -->
+<script>
+    setTimeout(function() {
+        document.querySelectorAll('.flash-message').forEach(function(msg) {
+            msg.style.opacity = '0';
+            msg.style.transform = 'translateX(100px)';
+            msg.style.transition = 'all 0.5s ease-out';
+            setTimeout(function() {
+                msg.remove();
+            }, 500);
+        });
+    }, 5000);
+</script>
 </body>
 </html>
