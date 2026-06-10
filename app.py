@@ -8,15 +8,16 @@ from datetime import datetime, timedelta
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'glubinka-secret-key-2024'
-# Замени строку №13 на эту (вставив свои данные от Neon):
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://neondb_owner:npg_Z6mIAdB5yaiT@ep-hidden-haze-aq65rdqu.c-8.us-east-1.aws.neon.tech/neondb?sslmode=require'
+app.config[
+    'SQLALCHEMY_DATABASE_URI'] = 'postgresql://neondb_owner:npg_YpcAkVbCh7G4@ep-hidden-haze-aq65rdqu.c-8.us-east-1.aws.neon.tech/neondb?sslmode=require'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-#настройки для почты админа
+# НАСТРОЙКИ ДЛЯ ПОЧТЫ АДМИНА
 MY_EMAIL = "golos.glubinki@mail.ru"
 MY_PASSWORD = "yKbRoR6Kl3gfaDn0JLdN"
 
-#автоматическое определение сервера по почте
+
+# АВТОМАТИЧЕСКОЕ ОПРЕДЕЛЕНИЕ СЕРВЕРА НА ПОЧТЕ
 def get_mail_server(email):
     email_lower = email.lower()
     if '@gmail.com' in email_lower:
@@ -43,7 +44,8 @@ def get_mail_server(email):
     else:
         return None
 
-#настройка почты на основе почты админа
+
+# НАСТРОЙКА ПОЧТЫ НА ОСНОВЕ ПОЧТЫ АДМИНА
 mail_config = get_mail_server(MY_EMAIL)
 if mail_config:
     app.config['MAIL_SERVER'] = mail_config['server']
@@ -53,17 +55,17 @@ if mail_config:
     app.config['MAIL_USERNAME'] = MY_EMAIL
     app.config['MAIL_PASSWORD'] = MY_PASSWORD
     app.config['MAIL_DEFAULT_SENDER'] = MY_EMAIL
-    print(f"✅ Почта настроена: {MY_EMAIL} через {mail_config['server']}")
+    print(f"Почта настроена: {MY_EMAIL} через {mail_config['server']}")
 else:
-    print(f"❌ Ошибка: Почтовый сервис для {MY_EMAIL} не поддерживается")
+    print(f"Ошибка: Почтовый сервис для {MY_EMAIL} не поддерживается")
 
-#объекты управления
+# ОБЪЕКТЫ УПРАВЛЕНИЯ
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 mail = Mail(app)
 
-#категории - ОБНОВЛЕННЫЙ СПИСОК с новыми темами
+# КАТЕГОРИИ ТЕМ
 CATEGORIES = [
     {"id": 1, "name": "Политика и Милонов", "color": "red"},
     {"id": 2, "name": "Нефоры и ЧВК Редан", "color": "gray"},
@@ -79,7 +81,8 @@ CATEGORIES = [
     {"id": 12, "name": "Бизнес и Эпштейн", "color": "emerald"},
 ]
 
-#модели бд
+
+# МОДЕЛИ БД
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
@@ -94,6 +97,7 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+
 class PasswordReset(db.Model):
     __tablename__ = 'password_reset'
     id = db.Column(db.Integer, primary_key=True)
@@ -101,6 +105,7 @@ class PasswordReset(db.Model):
     token = db.Column(db.String(100), unique=True, nullable=False)
     expires_at = db.Column(db.DateTime, nullable=False)
     used = db.Column(db.Boolean, default=False)
+
 
 class Topic(db.Model):
     __tablename__ = 'topic'
@@ -111,6 +116,7 @@ class Topic(db.Model):
     likes = db.Column(db.Integer, default=0)
     author = db.Column(db.String(100))
 
+
 class Comment(db.Model):
     __tablename__ = 'comment'
     id = db.Column(db.Integer, primary_key=True)
@@ -118,15 +124,18 @@ class Comment(db.Model):
     topic_id = db.Column(db.Integer, db.ForeignKey('topic.id'))
     author = db.Column(db.String(100))
 
-#загрузчик пользователя
+
+# ЗАГРУЗЧИК ПОЛЬЗОВАТЕЛЯ
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-#маршруты
+
+# МАРШРУТЫ
 @app.route('/')
 def index():
     return render_template('index.html', categories=CATEGORIES)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -181,11 +190,11 @@ def login():
 
     return render_template('login.html')
 
+
 @app.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
     if request.method == 'POST':
         email = request.form.get('email')
-
         user = User.query.filter_by(email=email).first()
 
         if not user:
@@ -222,7 +231,6 @@ def forgot_password():
 С уважением,
 Команда форума "Глубинка"
 '''
-
             mail.send(msg)
             flash(f'Ссылка для сброса пароля отправлена на {email}! Проверьте папку "Спам".', 'success')
             print(f"Письмо отправлено на {email}")
@@ -234,6 +242,7 @@ def forgot_password():
         return redirect(url_for('forgot_password'))
 
     return render_template('forgot_password.html')
+
 
 @app.route('/reset-password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
@@ -265,6 +274,7 @@ def reset_password(token):
 
     return render_template('reset_password.html', token=token)
 
+
 @app.route('/category/<int:cat_id>', methods=['GET', 'POST'])
 @login_required
 def category(cat_id):
@@ -283,6 +293,7 @@ def category(cat_id):
     topics = Topic.query.filter_by(category_id=cat_id).all()
     return render_template('category_topics.html', cat=cat, topics=topics)
 
+
 @app.route('/topic/<int:topic_id>', methods=['GET', 'POST'])
 @login_required
 def topic_detail(topic_id):
@@ -299,6 +310,7 @@ def topic_detail(topic_id):
     comments = Comment.query.filter_by(topic_id=topic_id).all()
     return render_template('topic_detail.html', topic=topic, comments=comments)
 
+
 @app.route('/delete_topic/<int:topic_id>', methods=['POST'])
 @login_required
 def delete_topic(topic_id):
@@ -307,25 +319,32 @@ def delete_topic(topic_id):
         Comment.query.filter_by(topic_id=topic_id).delete()
         db.session.delete(topic)
         db.session.commit()
+        flash('Тема удалена', 'success')
+    else:
+        flash('У вас нет прав на удаление темы', 'error')
     return redirect(url_for('category', cat_id=topic.category_id))
+
 
 @app.route('/delete_comment/<int:comment_id>', methods=['POST'])
 @login_required
 def delete_comment(comment_id):
     comment = Comment.query.get_or_404(comment_id)
-    if current_user.is_admin:
-        topic_id = comment.topic_id
+    if current_user.is_admin or comment.author == current_user.username:
         db.session.delete(comment)
         db.session.commit()
-        return redirect(url_for('topic_detail', topic_id=topic_id))
-    return "Доступ запрещен", 403
+        flash('Комментарий удалён', 'success')
+    else:
+        flash('У вас нет прав на удаление этого комментария', 'error')
+    return redirect(url_for('topic_detail', topic_id=comment.topic_id))
+
 
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('index'))
 
-#запуск
+
+# ЗАПУСК
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
