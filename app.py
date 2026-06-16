@@ -83,6 +83,7 @@ CATEGORIES = [
 
 
 # МОДЕЛИ БД
+# ПОЛЬЗОВАТЕЛИ(ЛОГИН, ПОЧТА, ПАРОЛЬ, ПРАВА АДМИНА)
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
@@ -98,6 +99,7 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
 
+# ХРАНЕНИЕ ТОКЕНОВ ДЛЯ СБРОСА ПАРОЛЯ
 class PasswordReset(db.Model):
     __tablename__ = 'password_reset'
     id = db.Column(db.Integer, primary_key=True)
@@ -107,6 +109,7 @@ class PasswordReset(db.Model):
     used = db.Column(db.Boolean, default=False)
 
 
+# ТЕМЫ ОБСУЖДЕНИЙ
 class Topic(db.Model):
     __tablename__ = 'topic'
     id = db.Column(db.Integer, primary_key=True)
@@ -117,6 +120,7 @@ class Topic(db.Model):
     author = db.Column(db.String(100))
 
 
+# КОММЕНТАРИИ К ТЕМАМ
 class Comment(db.Model):
     __tablename__ = 'comment'
     id = db.Column(db.Integer, primary_key=True)
@@ -132,11 +136,13 @@ def load_user(user_id):
 
 
 # МАРШРУТЫ
+#  ГЛАВНАЯ СТРАНИЦА СО СПИСКОМ КАТЕГОРИЙ
 @app.route('/')
 def index():
     return render_template('index.html', categories=CATEGORIES)
 
 
+# ВХОД И РЕГИСТРАЦИЯ
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -191,6 +197,7 @@ def login():
     return render_template('login.html')
 
 
+# ВОССТАНОВЛЕНИЕ ПАРОЛЯ ЧЕРЕЗ ПОЧТУ
 @app.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
     if request.method == 'POST':
@@ -244,6 +251,7 @@ def forgot_password():
     return render_template('forgot_password.html')
 
 
+# ВОССТАНОВЛЕНИЕ ПАРОЛЯ ЧЕРЕЗ ПОЧТУ
 @app.route('/reset-password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
     reset = PasswordReset.query.filter_by(token=token, used=False).first()
@@ -275,6 +283,7 @@ def reset_password(token):
     return render_template('reset_password.html', token=token)
 
 
+# СТРАНИЦА КОНКРЕТНОЙ КАТЕГОРИИ С ТЕМАМИ(СОЗДАЮТСЯ НОВЫЕ ТЕМЫ)
 @app.route('/category/<int:cat_id>', methods=['GET', 'POST'])
 @login_required
 def category(cat_id):
@@ -294,6 +303,7 @@ def category(cat_id):
     return render_template('category_topics.html', cat=cat, topics=topics)
 
 
+# СТРАНИЦА ТЕМЫ(СТАВИТЬ ЛАЙКИ, ПИСАТЬ КОММЫ)
 @app.route('/topic/<int:topic_id>', methods=['GET', 'POST'])
 @login_required
 def topic_detail(topic_id):
@@ -311,6 +321,7 @@ def topic_detail(topic_id):
     return render_template('topic_detail.html', topic=topic, comments=comments)
 
 
+# УДАЛЕНИЕ(ДЛЯ АДМИНА)
 @app.route('/delete_topic/<int:topic_id>', methods=['POST'])
 @login_required
 def delete_topic(topic_id):
@@ -325,6 +336,7 @@ def delete_topic(topic_id):
     return redirect(url_for('category', cat_id=topic.category_id))
 
 
+# УДАЛЕНИЕ(ДЛЯ АДМИНА)
 @app.route('/delete_comment/<int:comment_id>', methods=['POST'])
 @login_required
 def delete_comment(comment_id):
@@ -344,7 +356,7 @@ def logout():
     return redirect(url_for('index'))
 
 
-# ЗАПУСК
+# ЗАПУСК(СОЗДАНИЕ АДМИНА)
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
