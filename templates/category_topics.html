@@ -34,7 +34,7 @@
                     </a>
                 </h3>
                 {% if current_user.is_admin %}
-                <form method="POST" action="{{ url_for('delete_topic', topic_id=topic.id) }}" onsubmit="return confirm('Точно удалить тему? Вся движуха пропадет!')">
+                <form method="POST" action="{{ url_for('delete_topic', topic_id=topic.id) }}">
                     <button type="submit" class="bg-red-600 text-white border-2 border-black px-3 py-1 text-sm font-bold uppercase hover:bg-red-700 transition">
                         Удалить
                     </button>

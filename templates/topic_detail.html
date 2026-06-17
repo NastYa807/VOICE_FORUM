@@ -9,14 +9,14 @@
     </a>
 </div>
 
-<!-- БЛОК САМОЙ ТЕМЫ -->
+<!-- ИНФО САМОЙ ТЕМЫ -->
 <div class="bg-white border-4 border-black p-8 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] mb-10">
     <div class="flex justify-between items-start mb-6">
         <h1 class="text-4xl font-black uppercase">{{ topic.title }}</h1>
         <div class="flex flex-col items-end gap-2">
             <span class="bg-black text-white px-3 py-1 text-xs font-bold uppercase">Автор: {{ topic.author }}</span>
             {% if current_user.is_admin %}
-            <form action="{{ url_for('delete_topic', topic_id=topic.id) }}" method="POST" onsubmit="return confirm('Удалить всю тему со всеми сообщениями?');">
+            <form action="{{ url_for('delete_topic', topic_id=topic.id) }}" method="POST">
                 <button type="submit" class="bg-red-600 text-white px-3 py-1 text-[10px] font-bold uppercase border-2 border-black hover:shadow-none transition-all">СНЕСТИ ТЕМУ (ADMIN)</button>
             </form>
             {% endif %}
@@ -41,7 +41,7 @@
 
             <!-- КНОПКА УДАЛЕНИЯ КОММОВ -->
             {% if comment.author == current_user.username or current_user.is_admin %}
-            <form action="{{ url_for('delete_comment', comment_id=comment.id) }}" method="POST" onsubmit="return confirm('Удалить твой коммент?');">
+            <form action="{{ url_for('delete_comment', comment_id=comment.id) }}" method="POST">
                 <button type="submit" class="bg-red-600 text-white text-[9px] font-bold uppercase px-2 py-0.5 border border-black  hover:translate-y-0.5 hover:shadow-none transition-all mr-2">
                     Удалить
                 </button>

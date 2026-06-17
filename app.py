@@ -63,6 +63,8 @@ else:
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
+login_manager.login_message = 'Пожалуйста, войдите в систему для доступа к этой странице!'
+login_manager.login_message_category = 'info'
 mail = Mail(app)
 
 # КАТЕГОРИИ ТЕМ
@@ -234,9 +236,7 @@ def forgot_password():
 
 Если вы не запрашивали сброс пароля, просто проигнорируйте это письмо.
 
----
-С уважением,
-Команда форума "Глубинка"
+С уважением, Команда форума "Глубинка"
 '''
             mail.send(msg)
             flash(f'Ссылка для сброса пароля отправлена на {email}! Проверьте папку "Спам".', 'success')
